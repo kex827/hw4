@@ -80,6 +80,7 @@ export default class App extends React.Component {
     // 3. Forecast (forecastDay, forecastIcon, forecastTemperature)
     let forecast = []; // this will eventually hold the JSX elements for each day
 
+
     return (
       <View style={styles.container}>
         <View>
