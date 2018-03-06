@@ -47,10 +47,35 @@ export default class App extends React.Component {
       locationName: "",       // the name of the location (e.g. "Chicago, IL, USA")
       currentTemperature: "", // the current temperature (e.g. 50.85)
       currentSummary: "",     // the current weather summary (e.g. "Clear throughout the day")
-      currentIcon: "",        // the Font Awesome string of the current icon (e.g. "sun-o")
-      forecast: []            // an array holding information on the forecast
+      currentIcon: ""
+        export const icon = function(iconName) {
+        switch(iconName) {
+          case "clear-day":
+          case "clear-night":
+            return "sun-o";
+            break;
+          case "rain":
+            return "tint";
+            break;
+          case "wind":
+            return "bars";
+            break;
+          case "snow":
+          case "sleet":
+            return "snowflake-o";
+            break;
+          default:
+            return "cloud";
+            break;
+        }
+      };,        // the Font Awesome string of the current icon (e.g. "sun-o")
+      forecast: [
+
+      ]            // an array holding information on the forecast
     };
   }
+
+
 
   textInputChanged(text) {
     this.setState({
@@ -62,6 +87,22 @@ export default class App extends React.Component {
     // Event handler for clicking of the "Get weather!" button
     // Calls the geocoding and weather API, get back a location and weather object
     const response = await geocodeAndGetWeather(this.state.locationInputText);
+
+
+    export const geocodeAndGetWeather = async (address) => {
+      const googleMapsUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(address) + "&key=AIzaSyBkJMD1_etDjCXpjESOcixlKT1_U0QfYh4";
+      const googleMapsResponse = await fetch(googleMapsUrl);
+      const googleMapsJson = await googleMapsResponse.json();
+      const location = googleMapsJson.results[0].formatted_address;
+      const lat = googleMapsJson.results[0].geometry.location.lat;
+      const lng = googleMapsJson.results[0].geometry.location.lng;
+      const darkSkyUrl = "https://api.darksky.net/forecast/52dd0a0afe6b85172771658ff9fb4b3a/" + lat + "," + lng + "?callback=?";
+      const darkSkyResponse = await fetch(darkSkyUrl);
+      const darkSkyText = await darkSkyResponse.text();
+      const weather = eval(darkSkyText.replace("/**/ typeof  === 'function' && ", ""));
+      return { location: location,
+               weather:  weather};
+    };
 
     console.log(response.location);
     console.log(response.weather);
@@ -78,7 +119,22 @@ export default class App extends React.Component {
     // 2. Current weather conditions (styles provided with currentIcon, locationText,
     //    currentTemperature, currentSummary)
     // 3. Forecast (forecastDay, forecastIcon, forecastTemperature)
-    let forecast = []; // this will eventually hold the JSX elements for each day
+
+    let current = [
+      locationText: response.location,
+      currentIcon: response.icon,
+      currentTempurature: response,temperature,
+      currentSummary: response.summary,
+
+    ]
+
+    let forecast = [
+        locationName: response.location,
+        forcastDay: response.day,
+        forcastIcon: response.icon,
+        forcastTemperature: response.temperature,
+
+    ]; // this will eventually hold the JSX elements for each day
 
 
     return (
